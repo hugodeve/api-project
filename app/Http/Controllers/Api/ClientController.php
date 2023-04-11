@@ -3,74 +3,107 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ClientRequest;
+use App\Http\Resources\ClientResource;
+use App\Models\Client;
 use Illuminate\Http\Request;
+
 
 class ClientController extends Controller
 {
-    public function store(Request $request)
-    {
-        $request->validate([
-            'cpf' => 'required|string|unique:clients,cpf',
-            'name' => 'required|string|max:255',
-            'birthdate' => 'required|date',
-            'gender' => 'required|in:male,female',
-            'address' => 'required|string|max:255',
-            'state' => 'required|string|max:255',
-            'city' => 'required|string|max:255',
-        ]);
-
-        $client = Client::create([
-            'cpf' => $request->cpf,
-            'name' => $request->name,
-            'birthdate' => $request->birthdate,
-            'gender' => $request->gender,
-            'address' => $request->address,
-            'state' => $request->state,
-            'city' => $request->city,
-        ]);
-
-        return response()->json([
-            'message' => 'Cliente registrado exitosamente',
-            'client' => $client
-        ], 201);
-    }
-
+     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index(Request $request)
     {
-        $clients = Client::query();
-
-        if ($request->has('cpf')) {
-            $clients->where('cpf', 'like', '%' . $request->cpf . '%');
-        }
-
-        if ($request->has('name')) {
-            $clients->where('name', 'like', '%' . $request->name . '%');
-        }
-
-        if ($request->has('birthdate')) {
-            $clients->whereDate('birthdate', '=', $request->birthdate);
-        }
-
-        if ($request->has('gender')) {
-            $clients->where('gender', '=', $request->gender);
-        }
-
-        if ($request->has('address')) {
-            $clients->where('address', 'like', '%' . $request->address . '%');
-        }
-
-        if ($request->has('state')) {
-            $clients->where('state', 'like', '%' . $request->state . '%');
-        }
-
-        if ($request->has('city')) {
-            $clients->where('city', 'like', '%' . $request->city . '%');
-        }
-
-        $clients = $clients->get();
-
-        dd($clients);
-
-        return view('clients.index', compact('clients'));
+        $cliente = Client::all();
+        return response([
+            'data' => ClientResource::collection($cliente),
+            'status' => true
+        ], 200);
     }
+
+     /**
+     * Store a newly created resource in storage.
+     *
+     *  @param  app\Http\Requests\ClientRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(ClientRequest $request)
+    {
+        $cliente = Client::create($request->all());
+       
+        return response([
+            'data' => new ClientResource($cliente),
+            'status' => true
+        ], 200);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        return response([
+            'data' => new ClientResource(Client::find($id)),
+            'status' => true
+        ], 200);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+   
+     * @param  app\Http\Requests\ClientRequest  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(ClientRequest $request, $id)
+    {
+        $cliente = Client::find($id);
+        $cliente->update($request->all());
+        return response([
+            'data' => new ClientResource($cliente),
+            'status' => true
+        ], 200);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        Client::findOrFail($id)->delete();
+        return response(null, 204);
+    }
+
+    /**
+     * Update status.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    //public function updateStatus(Request $request, $id)
+   /* {
+        $status = false;
+        $acondicionamento = Acondicionamento::find($id);
+        if ($request->has('ativo') && in_array($request->ativo, [1, 0])) {
+            $acondicionamento->update($request->all());
+            $status = true;
+        }
+
+        return response([
+            'status' => $status
+        ], 200);
+    }
+    */
 }

@@ -18,8 +18,16 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
 Auth::routes();
+
+Route::get('/home', 'App\Http\Controllers\HomeController@index')->name('home');
+Route::get('/clients', 'App\Http\Controllers\ClientController@index')->name('administrativo.clients.index');
+
+
+
+
+/*
+
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
@@ -30,3 +38,5 @@ Route::get('/registro', function () {
 Route::get('/consulta', function () {
     return view('clients.index');
 });
+
+*/

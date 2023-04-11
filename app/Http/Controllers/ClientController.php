@@ -2,28 +2,19 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Models\Client;
 use Illuminate\Http\Request;
-
 
 class ClientController extends Controller
 {
-     /**
-     * Create a new controller instance.
+    /**
+     * Display a listing of the resource.
      *
-     * @return void
+     * @return \Illuminate\Http\Response
      */
-    public function __construct()
+    public function index()
     {
-        $this->middleware('auth');
-    }
-
-    public function index(){
         return view('clients.index');
     }
 
-    public function store(){
-        return view('clients.create');
-    }
-    
 }
