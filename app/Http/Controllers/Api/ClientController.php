@@ -92,18 +92,14 @@ class ClientController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    //public function updateStatus(Request $request, $id)
-   /* {
+   public function updateStatus(Request $request, $id)
+    {
         $status = false;
-        $acondicionamento = Acondicionamento::find($id);
-        if ($request->has('ativo') && in_array($request->ativo, [1, 0])) {
-            $acondicionamento->update($request->all());
-            $status = true;
-        }
-
+        $cliente = Client::find($id);
+    
         return response([
             'status' => $status
         ], 200);
     }
-    */
+    
 }

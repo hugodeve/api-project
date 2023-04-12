@@ -18,7 +18,7 @@
               <p class="card-category">Clientes</p>
             </div>
             <div class="card-body">
-              <table class="table" id="clientTable">
+              <table class="table" id="clientTbl">
                 <thead>
                   <tr>
                     <th class="text-primary font-weight-bold" style="width:auto">CPF</th>
@@ -48,8 +48,9 @@
 <script>
 $(document).ready(function() {
   // DataTable initialization
- let table = $('#clientTable').DataTable({
-    ajax: {
+  console.log($('#clientTbl'));
+ let table = $('#clientTbl').DataTable({
+  ajax: {
       url: '{{ route("cliente.lista") }}',
       type: 'GET',
       dataType: 'json',
@@ -81,6 +82,7 @@ $(document).ready(function() {
     columnDefs: [
       { targets: 1, orderable: false },
     ],
+  
   });
   
   // Open Modal New
@@ -117,28 +119,35 @@ $(document).ready(function() {
     });
   });
 
-  // Edit
   $('body').on('click', '.editAction', function () {
-    let id = $(this).data('id');
+  let id = $(this).data('id');
 
-    $.ajax({
-      url: '{{ url("/api/cliente") }}/' + id,
-      type: 'GET',
-      dataType: 'json',
-      success: function(data) {
-        $('#modalCliente').modal('show');
-        $('#tituloModal').text("Editar Cliente");
-        $('#inputId').val(data.id);
-        $('#input_cpf').val(data.cpf);
-        $('#input_name').val(data.name);
-        $('#input_birthdate').val(data.birthdate);
-        $('#input_gender').val(data.gender);
-        $('#input_address').val(data.address);
-        $('#input_state').val(data.state);
-        $('#input_city').val(data.city);
-      },
-    });
+  $.ajax({
+    url: '{{ url("/api/cliente") }}/' + id,
+    type: 'GET',
+    dataType: 'json',
+    success: function(response) {
+      $('#modalCliente').modal('show');
+      $('#tituloModal').text("Editar Cliente");
+      $('#inputId').val(data.id);
+      $('#input_cpf').val(data.cpf);
+      $('#input_name').val(data.name);
+      $('#input_birthdate').val(data.birthdate);
+      $('#input_gender').val(data.gender);
+      $('#input_address').val(data.address);
+      $('#input_state').val(data.state);
+      $('#input_city').val(data.city);
+      
+
+    },
+    
+    error: function(xhr, status, error) {
+      alert("No se pudo cargar el cliente.");
+    }
+    
   });
+  
+});
 
   // Delete
   $('body').on('click', '.deleteAction', function () {
