@@ -121,10 +121,10 @@ $('body').on('click', '#salvarClient', function () {
     success: function(data) {
       $('#modalCliente').modal('hide');
       table.ajax.reload();
-      isEditing = false; // Resetear la variable isEditing
+      isEditing = false;
     },
     error: function(xhr, textStatus, errorThrown) {
-      // Tu código de error aquí
+      
     }
   });
 });
@@ -132,7 +132,7 @@ $('body').on('click', '#salvarClient', function () {
 $('body').on('click', '.editAction', function () {
   let id = $(this).data('id');
 
-  isEditing = true; // Establecer la variable isEditing en true
+  isEditing = true; 
 
   $.ajax({
     url: '{{ url("/api/cliente") }}/' + id,
