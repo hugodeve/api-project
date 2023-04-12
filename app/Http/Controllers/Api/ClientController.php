@@ -85,21 +85,4 @@ class ClientController extends Controller
         return response(null, 204);
     }
 
-    /**
-     * Update status.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-   public function updateStatus(Request $request, $id)
-    {
-        $status = false;
-        $cliente = Client::find($id);
-    
-        return response([
-            'status' => $status
-        ], 200);
-    }
-    
 }

@@ -25,7 +25,7 @@ class ClientRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //'descricao' => 'required|string|max:255',
+            
         ];
     }
     public function failedValidation(Validator $validator)

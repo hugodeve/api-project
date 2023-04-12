@@ -21,7 +21,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'App\Http\Controllers\HomeController@index')->name('home');
-Route::get('/clients', 'App\Http\Controllers\ClientController@index')->name('administrativo.clients.index');
+Route::get('/clients', 'App\Http\Controllers\ClientController@index')->name('clients.index');
 
 
 
@@ -40,3 +40,7 @@ Route::get('/consulta', function () {
 });
 
 */
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

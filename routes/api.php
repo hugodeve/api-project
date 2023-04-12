@@ -15,19 +15,9 @@ use App\Http\Controllers\Api\ClientController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::get('cliente', 'App\Http\Controllers\Api\ClientController@index')->name('cliente.lista');
+Route::get('cliente/{id}', 'App\Http\Controllers\Api\ClientController@show')->name('cliente.mostrar');
+Route::post('cliente', 'App\Http\Controllers\Api\ClientController@store')->name('cliente.criar');
+Route::put('cliente/{id}', 'App\Http\Controllers\Api\ClientController@update')->name('cliente.atualizar');
+Route::delete('cliente/{id}', 'App\Http\Controllers\Api\ClientController@destroy')->name('cliente.excluir');
 
-
-
-Route::middleware(['auth:api', 'permission'])->group(function() {
-  // clients
-  Route::get('cliente', 'App\Http\Controllers\Api\ClientController@index')->name('cliente.lista');
-  Route::get('cliente/{id}', 'App\Http\Controllers\Api\ClientController@show')->name('cliente.mostrar');
-  Route::post('cliente', 'App\Http\Controllers\Api\ClientController@store')->name('cliente.criar');
-  Route::put('cliente/{id}', 'App\Http\Controllers\Api\ClientController@update')->name('cliente.atualizar');
-  Route::delete('cliente/{id}', 'App\Http\Controllers\Api\ClientController@destroy')->name('cliente.excluir');
-  Route::put('cliente/{id}/status', 'App\Http\Controllers\Api\ClientController@updateStatus')->name('cliente.atualizar_status');
-
-}); 

@@ -10,6 +10,7 @@
 
       <div class="modal-body">
         <form id="formCliente">
+        @csrf
           <div class="row mx-0 mb-4">
             <div class="col-md-12">
               <div class="form-group">
@@ -19,8 +20,8 @@
                 <input type="text" class="form-control" id="input_cpf">
                 <label for="input_name">Nome</label>
                 <input type="text" class="form-control" id="input_name">
-                <label for="input_birthdate">Data Nascimento</label>
-                <input type="text" class="form-control" id="input_birthdate">
+                <label for="input_birthdate dat">Data Nascimento</label>
+                <input type="text" class="form-control date" id="input_birthdate">
                 <label for="input_gender">Genero</label>
                 <input type="text" class="form-control" id="input_gender">
                 <label for="input_address">Endereço</label>
@@ -49,9 +50,9 @@
   </script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
-  flatpickr("#input_birthdate", {
+  flatpickr(".date", {
     dateFormat: "d/m/Y",
-    locale: "es",
+    locale: "pt",
   });
 </script>
 @endpush

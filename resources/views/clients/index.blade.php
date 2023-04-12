@@ -43,21 +43,14 @@
   @include('clients.modal')
 @endsection
 
+
+
 @push('js')
 
 <script>
 $(document).ready(function() {
   // DataTable initialization
-  console.log($('#clientTbl'));
  let table = $('#clientTbl').DataTable({
-  ajax: {
-      url: '{{ route("cliente.lista") }}',
-      type: 'GET',
-      dataType: 'json',
-      dataSrc: function (response) {
-        return response.data;
-      }
-    },
     columns: [
       { data: "cpf" },
       { data: "name" },
@@ -82,6 +75,14 @@ $(document).ready(function() {
     columnDefs: [
       { targets: 1, orderable: false },
     ],
+    ajax: {
+      url: '{{ route("cliente.lista") }}',
+      type: 'GET',
+      dataType: 'json',
+      dataSrc: function (response) {
+        return response.data;
+      }
+    },
   
   });
   
@@ -92,63 +93,73 @@ $(document).ready(function() {
     $('#formCliente')[0].reset();
   });
 
-  // Save
-  $('body').on('click', '#salvarClient', function () {
-    const JSONRequest = {
-      cpf: $("#input_cpf").val(),
-      name: $("#input_name").val(),
-      birthdate: $("#input_birthdate").val(),
-      gender:$("#input_gender").val(),
-      address: $("#input_address").val(),
-      state: $("#input_state").val(),
-      city: $("#input_city").val()
-    };
-    $.ajax({
-      url: '{{ url("/api/cliente") }}',
-      type: 'POST',
-      dataType: 'json',
-      data: JSON.stringify(JSONRequest),
-      contentType: 'application/json',
-      success: function(data) {
-        $('#modalCliente').modal('hide');
-        table.ajax.reload();
-      },
-      error: function(xhr, textStatus, errorThrown) {
-        // Tu código de error aquí
-      }
-    });
-  });
+  let isEditing = false;
 
-  $('body').on('click', '.editAction', function () {
+$('body').on('click', '#salvarClient', function () {
+  const JSONRequest = {
+    cpf: $("#input_cpf").val(),
+    name: $("#input_name").val(),
+    birthdate: $("#input_birthdate").val(),
+    gender:$("#input_gender").val(),
+    address: $("#input_address").val(),
+    state: $("#input_state").val(),
+    city: $("#input_city").val()
+  };
+
+  let url = '{{ url("/api/cliente") }}';
+  let type = 'POST';
+  if (isEditing) {
+    url += '/' + $('#inputId').val();
+    type = 'PUT';
+  }
+  $.ajax({
+    url: url,
+    type: type,
+    dataType: 'json',
+    data: JSON.stringify(JSONRequest),
+    contentType: 'application/json',
+    success: function(data) {
+      $('#modalCliente').modal('hide');
+      table.ajax.reload();
+      isEditing = false; // Resetear la variable isEditing
+    },
+    error: function(xhr, textStatus, errorThrown) {
+      // Tu código de error aquí
+    }
+  });
+});
+
+$('body').on('click', '.editAction', function () {
   let id = $(this).data('id');
+
+  isEditing = true; // Establecer la variable isEditing en true
 
   $.ajax({
     url: '{{ url("/api/cliente") }}/' + id,
-    type: 'GET',
+    type: 'PUT',
     dataType: 'json',
     success: function(response) {
       $('#modalCliente').modal('show');
       $('#tituloModal').text("Editar Cliente");
-      $('#inputId').val(data.id);
-      $('#input_cpf').val(data.cpf);
-      $('#input_name').val(data.name);
-      $('#input_birthdate').val(data.birthdate);
-      $('#input_gender').val(data.gender);
-      $('#input_address').val(data.address);
-      $('#input_state').val(data.state);
-      $('#input_city').val(data.city);
-      
-
+      $('#inputId').val(response.data.id);
+      $('#input_cpf').val(response.data.cpf);
+      $('#input_name').val(response.data.name);
+      var birthdate = new Date(response.data.birthdate);
+      var day = birthdate.getDate();
+      var month = birthdate.getMonth() + 1;
+      var year = birthdate.getFullYear();
+      var formattedDate = (day < 10 ? '0' + day : day) + '/' + (month < 10 ? '0' + month : month) + '/' + year;
+      $('#input_birthdate').val(formattedDate);
+      $('#input_gender').val(response.data.gender);
+      $('#input_address').val(response.data.address);
+      $('#input_state').val(response.data.state);
+      $('#input_city').val(response.data.city);
     },
-    
     error: function(xhr, status, error) {
       alert("No se pudo cargar el cliente.");
     }
-    
   });
-  
 });
-
   // Delete
   $('body').on('click', '.deleteAction', function () {
     let id = $(this).data('id');
@@ -163,5 +174,12 @@ $(document).ready(function() {
   });
   });
 });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+  flatpickr(".date", {
+    dateFormat: "d/m/Y",
+    locale: "pt",
+  });
 </script>
 @endpush
